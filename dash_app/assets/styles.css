@@ -17,18 +17,19 @@ body {
     grid-gap: 10px;
     border: 1px solid white;
     justify-content: center;
+    
 }
 
 .grid-container {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 10px;
-    width: 50%;
+    width: 100%;
 }
 
 .grid-item {
-    width: 100px; /* Set to your desired width */
-    height: 100px; /* Set to your desired height */
+    width: 200px; /* Set to your desired width */
+    height: 150px; /* Set to your desired height */
     border: 1px solid gray;
 }
 
@@ -44,8 +45,8 @@ body {
 }
 
 .grid-item-10x8 {
-    width: 40px; /* Set to your desired width */
-    height: 40px; /* Set to your desired height */
-    border: 1px solid gray;
+    width: 110px; /* Set to your desired width */
+    height: 130px; /* Set to your desired height */
+    border: 0px solid gray;
     background-color: #f0f0f0;
 }
