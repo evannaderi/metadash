@@ -1,77 +1,3 @@
-# import dash_core_components as dcc
-# import dash_html_components as html
-# from dash_app import app
-# from dash.dependencies import Input, Output
-# import plotly.express as px
-# import pandas as pd
-
-# data = {
-#     'Name': ['Alice', 'Bob'],
-#     'Score': [90, 85]
-# }
-
-# df = pd.DataFrame(data)
-
-# fig = px.pie(df, names='Name', values='Score', hole=0.3)
-# fig.update_traces(textinfo='none')
-# fig.update_layout(
-#     title_text='',
-#     showlegend=False,
-#     width=130,  # Set the width to 110 pixels
-#     height=130  # Set the height to 130 pixels
-# )
-
-# grid_cells = []
-
-# for i in range(8):
-#     if i == 5:
-#         cell = html.Div("hello", id=f"cell-{i}", className='grid-item-10x8', style={'color': 'red'})
-#     elif i == 6:
-#         cell = html.Div([
-#             dcc.Graph(
-#                 id='example-graph',
-#                 figure=fig
-#             )
-#         ], id=f"cell-{i}", className='grid-item')
-
-#     else:
-#         cell = html.Div("", id=f"cell-{i}", className='grid-item-10x8') 
-
-#     grid_cells.append(cell)    
-
-           
-
-# app.layout = html.Div([
-#     html.H1(
-#         "Teacher View",
-#         className="centered-header"
-#     ),
-#     html.Div(
-#         [
-#             # Left side grid (previously set up)
-#             html.Div(
-#                 [
-#                     html.Div("Placeholder", className='grid-item') for _ in range(9)
-#                 ],
-#                 className='grid-container'
-#             ),
-            
-#             # Right side 10x8 grid
-#             html.Div(grid_cells, className='grid-10x8')
-#         ],
-#         className='main-container'
-#     )
-# ])
-
-# @app.callback(
-#     Output("output-div", "children"),
-#     [Input("input-text", "value")]
-# )
-# def update_output_div(input_value):
-#     return f"You've entered: {input_value}"
-
-#-----------------------
-
 import dash_core_components as dcc
 import dash_html_components as html
 from dash_app import app
@@ -80,10 +6,24 @@ import plotly.express as px
 import pandas as pd
 import plotly.graph_objects as go
 from dash import Input, Output, State
+import dash
+
+# Read the entire CSV file into a DataFrame
+try:
+    df = pd.read_csv('sample_data.csv')
+    print('success')
+except FileNotFoundError:
+    print("Error: sample.csv not found")
+
+# Initialize a row counter 1 down for title
+current_row = 1
+grid_cells = []
+num_students = 0
+students = []
 
 # Function to create a simple donut chart
 def create_donut_chart(num):
-    fig = px.pie(values=[1, 10], names=[f"A{num}", f"B{num}"], hole=0.3)
+    fig = px.pie(values=[num, 1 - num], names=[f"A{num}", f"B{num}"], hole=0.3)
     fig.update_traces(textinfo='none')
     fig.update_layout(
         showlegend=False,
@@ -96,37 +36,86 @@ def create_donut_chart(num):
 app.layout = html.Div([
     html.Button("Add Student", id="add_row_btn", n_clicks=0),
     dcc.Input(id='input_name', type='text', placeholder='Enter Student Name'),
+    dcc.Interval(
+            id='interval-component',
+            interval=1*1000, # in milliseconds
+            n_intervals=0
+    ),
     html.Div([], id="chart_grid")
 ])
 
-grid_cells = []
-
 @app.callback(
     Output("chart_grid", "children"),
-    [Input("add_row_btn", "n_clicks")],
+    [Input("add_row_btn", "n_clicks"), Input("interval-component", "n_intervals")],
     [State('input_name', 'value')]
 )
-def add_row(row, name):
-    if row > 0 and name:
-        figs = [
-                create_donut_chart(row*10 + 0), #engaged
-                create_donut_chart(row*10 + 1), #confused
-                create_donut_chart(row*10 + 2), #frustrated
-                create_donut_chart(row*10 + 3) #bored
-        ]
+def update_charts(add_row_clicks, n_intervals, name):
+    global grid_cells, current_row, num_students, students
+    ctx = dash.callback_context
+    input_id = ctx.triggered[0]['prop_id'].split('.')[0]
 
-        grid_cells.append(html.Div(name))
+    if input_id == "add_row_btn":
+        if add_row_clicks > 0 and name:
+            num_students += 1
+            figs = [
+                    create_donut_chart(add_row_clicks*10 + 0), #engaged
+                    create_donut_chart(add_row_clicks*10 + 1), #confused
+                    create_donut_chart(add_row_clicks*10 + 2), #frustrated
+                    create_donut_chart(add_row_clicks*10 + 3) #bored
+            ]
 
-        for i in range(len(figs)):
-            cell = html.Div([dcc.Graph(figure=figs[i], config={'displayModeBar': False})], style={
-                    'width': '100px',
-                    'height': '100px'
-            })
-            grid_cells.append(cell)
+            students.append(name)
+            grid_cells.append(html.Div(name))
 
-    return html.Div(grid_cells, style={
-            'display': 'grid',
-            'grid-template-columns': 'repeat(5, 1fr)',
-            'grid-template-rows': f'repeat({row}, 1fr)',
-            'grid-gap': '5px'
-    })
+            for i in range(len(figs)):
+                cell = html.Div([dcc.Graph(figure=figs[i], config={'displayModeBar': False})], style={
+                        'width': '100px',
+                        'height': '100px'
+                })
+                grid_cells.append(cell)
+
+        return html.Div(grid_cells, style={
+                'display': 'grid',
+                'grid-template-columns': 'repeat(5, 1fr)',
+                'grid-template-rows': f'repeat({row}, 1fr)',
+                'grid-gap': '5px'
+        })
+    elif input_id == "interval-component":
+        global df
+    
+        # If all rows are read, reset the counter
+        if current_row >= len(df):
+            current_row = 1
+
+        new_grid_cells = []
+
+        for student in students: 
+            figs = []
+
+            new_grid_cells.append(student)
+
+            # Read a row from the DataFrame
+            row = df.iloc[current_row]
+            for col in range(4):
+                val = row[col]
+                figs.append(create_donut_chart(val))
+                print(val)
+                print(col)
+
+            for i in range(len(figs)):
+                cell = html.Div([dcc.Graph(figure=figs[i], config={'displayModeBar': False})], style={
+                        'width': '100px',
+                        'height': '100px'
+                })
+                new_grid_cells.append(cell)
+            
+            current_row += 1  # Update row counter
+
+        return html.Div(new_grid_cells, style={
+                'display': 'grid',
+                'grid-template-columns': f'repeat({5}, 1fr)',
+                'grid-gap': '5px'
+        })
+
+    
+
