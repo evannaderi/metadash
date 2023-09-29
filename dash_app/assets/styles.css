@@ -40,7 +40,6 @@ body {
 .grid-10x8 {
     display: grid;
     grid-template-columns: repeat(8, 1fr);
-    grid-gap: 10px;
     height: 100%;
 }
 
@@ -48,5 +47,10 @@ body {
     width: 110px; /* Set to your desired width */
     height: 130px; /* Set to your desired height */
     border: 0px solid gray;
-    background-color: #f0f0f0;
+    background-color: #000000;
+}
+
+/*forces the height to be right*/
+.js-plotly-plot .plotly {
+    height: 100px !important;
 }
