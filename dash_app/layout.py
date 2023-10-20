@@ -5,11 +5,17 @@ from dash.dependencies import Input, Output, State
 import plotly.express as px
 import pandas as pd
 import dash
+import os
+import sys
 
 class Student:
-    def __init__(self, name):
+    def __init__(self, name, filename="data/student1.csv"):
         self.name = name
         self.figures = []
+        if not os.path.exists(filename):
+            print(f"Error: {self.filename} not found")
+            sys.exit(1)
+        self.df = pd.read_csv(filename)
 
     def create_figures(self, nums):
         self.figures = [self.create_donut_chart(num) for num in nums]
@@ -27,12 +33,9 @@ class Student:
 
 # Initialize global variables
 students = []
-
-try:
-    df = pd.read_csv('sample_data.csv')
-    print('success')
-except FileNotFoundError:
-    print("Error: sample.csv not found")
+students.append(Student("Student1", "data/student1.csv"))
+students.append(Student("Student2", "data/student2.csv"))
+students.append(Student("Student3", "data/student3.csv"))
 
 current_row = 1
 
@@ -53,7 +56,7 @@ app.layout = html.Div([
     [State('input_name', 'value')]
 )
 def update_charts(add_row_clicks, n_intervals, name):
-    global current_row, students, df
+    global current_row, students
     ctx = dash.callback_context
     input_id = ctx.triggered[0]['prop_id'].split('.')[0]
 
@@ -67,9 +70,9 @@ def update_charts(add_row_clicks, n_intervals, name):
     for student in students:
         grid_cells.append(html.Div(student.name))
         if input_id == "interval-component":
-            row = df.iloc[current_row]
+            row = student.df.iloc[current_row]
             student.create_figures([row[col] for col in range(4)])
-            current_row = (current_row + 1) % len(df)
+            current_row = (current_row + 1) % len(student.df)
         
         for fig in student.figures:
             cell = html.Div([dcc.Graph(figure=fig, config={'displayModeBar': False})], style={
