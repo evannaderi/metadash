@@ -7,6 +7,7 @@ def create_donut_chart(num, color):
         showlegend=False,
         margin=dict(l=0, r=0, t=0, b=0),
         paper_bgcolor='black'
+        annotations=[dict(text=str(round(num * 100)) + '%', x=0.5, y=0.5, font_size=20, showarrow=False)]
     )
     fig.show()
 

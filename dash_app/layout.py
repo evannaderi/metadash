@@ -29,6 +29,7 @@ class Student:
             "frustration": 0,
             "boredom": 0,
         }
+        self.current_row_df = 1
     
     def increment_count(self, emotion):
         self.max_emotion_counts[emotion] += 1
@@ -62,12 +63,22 @@ class Student:
         return self.create_donut_chart(num, "red")
 
     def create_donut_chart(self, num, color):
-        fig = px.pie(values=[num, 1 - num], hole=0.3)
+        fig = px.pie(values=[num, 1 - num], hole=0.5)
         fig.update_traces(textinfo='none', marker=dict(colors=[color, 'grey']))
         fig.update_layout(
             showlegend=False,
             margin=dict(l=0, r=0, t=0, b=0),
-            paper_bgcolor='black'
+            paper_bgcolor='black',
+            annotations=[dict(
+                    text=str(round(num * 100)) + '%', 
+                    x=0.5, 
+                    y=0.5, 
+                    font_size=20, 
+                    showarrow=False,
+                    font=dict(
+                        color='white'
+                    )
+            )]
         )
         return fig
 
@@ -117,14 +128,15 @@ def update_charts(add_row_clicks, n_intervals, name):
     for student in students:
         grid_cells.append(html.Div(student.name))
         if input_id == "interval-component":
-            row = student.df.iloc[current_row]
+            print("reading row number: " + str(student.current_row_df))
+            row = student.df.iloc[student.current_row_df]
             student.increment_count(emotions_codes[row["MaxEmotionCode"]])
             student.update_rates()
             student.create_figures()
-            current_row = (current_row + 1) % len(student.df)
+            student.current_row_df += 1
         
         for fig in student.figures:
-            cell = html.Div([dcc.Graph(figure=fig, config={'displayModeBar': False})], style={
+            cell = html.Div([dcc.Graph(figure=student.figures[fig], config={'displayModeBar': False})], style={
                     'width': '100px',
                     'height': '100px'
             })
