@@ -7,6 +7,7 @@ import pandas as pd
 import dash
 import os
 import sys
+from .left_half import get_left_half
 
 class Student:
     def __init__(self, name, filename="data/student1.csv"):
@@ -98,14 +99,18 @@ emotions_codes = {
 }
 
 app.layout = html.Div([
-    html.Button("Add Student", id="add_row_btn", n_clicks=0),
-    dcc.Input(id='input_name', type='text', placeholder='Enter Student Name'),
-    dcc.Interval(
-            id='interval-component',
-            interval=1*1000,
-            n_intervals=0
-    ),
-    html.Div([], id="chart_grid"),
+    get_left_half(),
+    html.Div([
+        html.Button("Add Student", id="add_row_btn", n_clicks=0),
+        dcc.Input(id='input_name', type='text', placeholder='Enter Student Name'),
+        dcc.Interval(
+                id='interval-component',
+                interval=1*1000,
+                n_intervals=0
+        ),
+        html.Div([], id="chart_grid"),
+    ], style={'width': '50%', 'display': 'inline-block'})
+    
 ])
 
 @app.callback(
