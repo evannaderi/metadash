@@ -13,7 +13,7 @@ GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 YELLOW = (255, 255, 0)
 ORANGE = (255, 165, 0)
-LOWER_OPACITY = 0.3
+LOWER_OPACITY = 0.4
 HIGHER_OPACITY = 1
 
 class Student:
@@ -114,11 +114,11 @@ class Student:
 
 # Initialize global variables
 students = []
-students.append(Student("Student1", "data/DataNumbers.csv"))
-students.append(Student("Student2", "data/DataNumbers.csv"))
-students.append(Student("Student3", "data/DataNumbers.csv"))
-students.append(Student("Student4", "data/DataNumbers.csv"))
-students.append(Student("Student5", "data/DataNumbers.csv"))
+students.append(Student("Student1", "data/MaxEmotion1.csv"))
+students.append(Student("Student2", "data/MaxEmotion2.csv"))
+students.append(Student("Student3", "data/MaxEmotion3.csv"))
+students.append(Student("Student4", "data/MaxEmotion4.csv"))
+students.append(Student("Student5", "data/MaxEmotion5.csv"))
 
 current_row = 1
 
