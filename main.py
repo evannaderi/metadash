@@ -8,3 +8,5 @@ if __name__ == '__main__':
     # After running, go to http://127.0.0.1:5001/dashboard in your browser
 
     # The github repo link is https://github.com/evannaderi/metadash
+    # git stash
+    # git pull
