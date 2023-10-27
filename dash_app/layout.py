@@ -45,22 +45,22 @@ class Student:
         self.figures["confusion"] = self.create_confused_chart(self.rates["confusion"])
         self.figures["frustration"] = self.create_frustrated_chart(self.rates["frustration"])
         self.figures["boredom"] = self.create_bored_chart(self.rates["boredom"])
-        print(self.rates) # debug
+        #print(self.rates) # debug
     
     def create_engaged_chart(self, num):
-        print(f"Creating donut chart with num: {num}, 1-num: {1-num}") # debug
+        #print(f"Creating donut chart with num: {num}, 1-num: {1-num}") # debug
         return self.create_donut_chart(num, "green")
     
     def create_confused_chart(self, num):
-        print(f"Creating donut chart with num: {num}, 1-num: {1-num}") # debug
+        #print(f"Creating donut chart with num: {num}, 1-num: {1-num}") # debug
         return self.create_donut_chart(num, "yellow")
     
     def create_frustrated_chart(self, num):
-        print(f"Creating donut chart with num: {num}, 1-num: {1-num}") # debug
+        #print(f"Creating donut chart with num: {num}, 1-num: {1-num}") # debug
         return self.create_donut_chart(num, "orange")
     
     def create_bored_chart(self, num):
-        print(f"Creating donut chart with num: {num}, 1-num: {1-num}") # debug
+        #print(f"Creating donut chart with num: {num}, 1-num: {1-num}") # debug
         return self.create_donut_chart(num, "red")
 
     def create_donut_chart(self, num, color):
@@ -88,6 +88,8 @@ students = []
 students.append(Student("Student1", "data/DataNumbers.csv"))
 students.append(Student("Student2", "data/DataNumbers.csv"))
 students.append(Student("Student3", "data/DataNumbers.csv"))
+students.append(Student("Student4", "data/DataNumbers.csv"))
+students.append(Student("Student5", "data/DataNumbers.csv"))
 
 current_row = 1
 
@@ -109,7 +111,7 @@ app.layout = html.Div([
                 n_intervals=0
         ),
         html.Div([], id="chart_grid"),
-    ], style={'width': '50%', 'display': 'inline-block'})
+    ], style={'width': '50%', 'display': 'inline-block', 'vertical-align': 'top'})
     
 ])
 
@@ -133,7 +135,7 @@ def update_charts(add_row_clicks, n_intervals, name):
     for student in students:
         grid_cells.append(html.Div(student.name))
         if input_id == "interval-component":
-            print("reading row number: " + str(student.current_row_df))
+            #print("reading row number: " + str(student.current_row_df)) # debug
             row = student.df.iloc[student.current_row_df]
             student.increment_count(emotions_codes[row["MaxEmotionCode"]])
             student.update_rates()
