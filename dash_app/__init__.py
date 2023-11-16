@@ -3,6 +3,6 @@ from flask_app import server
 import os, sys
 
 print("Current working directory:", os.getcwd())
-app = dash.Dash(__name__, server=server, url_base_pathname='/dashboard/')
+app = dash.Dash(__name__, server=server, url_base_pathname='/teacher/')
 
 from dash_app import layout

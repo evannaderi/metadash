@@ -49,13 +49,13 @@ def get_left_half():
             html.Div([
                 html.A([
                     html.Img(src='assets/message.png', style={'width': '100%', 'height': 'auto'})
-                ], id='emotion-button', href='https://www.google.com', style={'width': '33.33%', 'display': 'inline-block'}),
+                ], id='message-button', href='https://www.google.com', style={'width': '33.33%', 'display': 'inline-block'}),
                 html.A([
                     html.Img(src='assets/clock.png', style={'width': '100%', 'height': 'auto'})
-                ], id='performance-button', href='https://www.google.com', style={'width': '33.33%', 'display': 'inline-block'}),
+                ], id='clock-button', href='https://www.google.com', style={'width': '33.33%', 'display': 'inline-block'}),
                 html.A([
                     html.Img(src='assets/medal.png', style={'width': '100%', 'height': 'auto'})
-                ], id='feedback-button', href='https://www.google.com', style={'width': '33.33%', 'display': 'inline-block'}),
+                ], id='medal-button', href='https://www.google.com', style={'width': '33.33%', 'display': 'inline-block'}),
                 # ... (continue for other buttons)
             ])
             # html.Div([html.Button('Private message', id='private-message-button')], style={'width': '33.33%', 'display': 'inline-block'}),
